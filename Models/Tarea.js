@@ -13,10 +13,6 @@ const tareaSchema = new mongoose.Schema({
     type: Number,
     required: true
   },
-  ayudante: {
-    type: mongoose.Schema.Types.ObjectId, // Referencia al modelo Ayudante
-    ref: 'Ayudante'
-  },
   estado: {
     type: String,
     enum: ['activo', 'inactivo'],

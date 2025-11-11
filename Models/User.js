@@ -6,7 +6,11 @@ const userSchema = new Schema({
   email: {type: String, required: true, unique: true, trim: true},
   contraseña: {type: String, required: true, trim: true},
   tipo: {type: mongoose.Schema.Types.ObjectId, ref: 'Rol'},
-  active: {type: Boolean, default: true},
+  estado: {
+    type: String,
+    enum: ['activo', 'inactivo'],
+    default: 'activo',
+  },
   recoveryCode: {
     code: {
         type: String,

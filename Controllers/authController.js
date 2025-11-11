@@ -16,7 +16,7 @@ exports.login = async (req, res) => {
       return res.status(404).json({ message: 'Usuario o contraseña incorrectos' });
     }
 
-    if (!user.active) {
+    if (!user.estado === 'activo') {
       return res.status(404).json({ message: 'Usuario inactivo' });
     }
 
@@ -188,15 +188,35 @@ exports.getUsers = async (req, res) => {
 
 exports.updateUsuario = async (req, res) => {
   try {
-    const usuario = await Usuario.findByIdAndUpdate(req.params.id, req.body, { new: true });
+    const allowedFields = ['usuario', 'email', 'tipo', 'estado'];
+    const updates = {};
+
+    for (const key of Object.keys(req.body)) {
+      if (allowedFields.includes(key)) {
+        updates[key] = req.body[key];
+      }
+    }
+
+    if (Object.keys(updates).length === 0) {
+      return res.status(400).json({ error: 'No hay campos válidos para actualizar' });
+    }
+
+    const usuario = await Usuario.findByIdAndUpdate(
+      req.params.id,
+      { $set: updates },
+      { new: true, runValidators: true } 
+    );
+
     if (!usuario) {
       return res.status(404).json({ error: 'Usuario no encontrado' });
     }
+
     res.json(usuario);
   } catch (error) {
     res.status(400).json({ error: error.message });
   }
 };
+
 
 exports.disableUsuario = async (req, res) => {
   const { id } = req.params;

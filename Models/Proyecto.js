@@ -15,7 +15,10 @@ const actividadSchema = new mongoose.Schema({
     required: true,
   },
   tareas: [
-    { type: mongoose.Schema.Types.ObjectId, ref: 'Tarea' }
+    {
+      tarea: { type: mongoose.Schema.Types.ObjectId, ref: 'Tarea' },
+      ayudante: { type: mongoose.Schema.Types.ObjectId, ref: 'Ayudante' }
+    }
   ],
   insumos: [
     { 
